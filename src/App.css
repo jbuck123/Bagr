@@ -426,7 +426,7 @@ body {
   padding: 10px 14px;
   border: 2px solid #334155;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
+  background: #1e293b;
   color: #fff;
   font-size: 0.9rem;
   font-family: inherit;
@@ -462,7 +462,7 @@ body {
   padding: 10px 14px;
   border: 2px solid #334155;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
+  background: #1e293b;
   color: #fff;
   font-size: 0.9rem;
   font-family: inherit;
@@ -472,6 +472,12 @@ body {
 .picker-manufacturer:focus {
   outline: none;
   border-color: #7c3aed;
+}
+
+.picker-manufacturer option,
+.picker-type option {
+  background: #1e293b;
+  color: #fff;
 }
 
 .remove-disc-btn {
@@ -499,7 +505,7 @@ body {
 
 .picker-item {
   display: flex;
-  justify-content: space-between;
+  gap: 12px;
   align-items: center;
   padding: 12px;
   border-radius: 10px;
@@ -517,7 +523,22 @@ body {
   border: 1px solid #7c3aed;
 }
 
+.picker-item-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.picker-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .picker-item-info {
+  flex: 1;
   text-align: left;
 }
 
