@@ -1,4 +1,4 @@
-function DiscSlot({ disc, photo, plastic, color, onClick }) {
+function DiscSlot({ disc, photo, plastic, color, link, onClick }) {
   const discColor = color || '#7c3aed'
 
   // Circle style - gradient for color mode, clean for photo mode
@@ -7,6 +7,13 @@ function DiscSlot({ disc, photo, plastic, color, onClick }) {
       rgba(255, 255, 255, 0.3) 0%,
       ${discColor}80 40%,
       ${discColor} 100%)`
+  }
+
+  const handleShopClick = (e) => {
+    e.stopPropagation()
+    if (link) {
+      window.open(link, '_blank', 'noopener,noreferrer')
+    }
   }
 
   return (
@@ -30,6 +37,11 @@ function DiscSlot({ disc, photo, plastic, color, onClick }) {
               <span>{disc.turn}</span>
               <span>{disc.fade}</span>
             </div>
+            {link && (
+              <button className="disc-shop-link" onClick={handleShopClick} title="Buy this disc">
+                Shop
+              </button>
+            )}
           </div>
         </div>
       ) : (

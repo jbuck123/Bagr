@@ -163,6 +163,7 @@ function App() {
           onPhotoUpdate={handlePhotoUpdate}
           onPlasticUpdate={handlePlasticUpdate}
           onColorUpdate={handleColorUpdate}
+          onLinkUpdate={handleLinkUpdate}
           onRemove={handleRemoveDisc}
           onClose={() => {
             setPickerOpen(false)

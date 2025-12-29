@@ -255,13 +255,14 @@ const DISC_COLORS = [
   { name: 'Gray', value: '#64748b' },
 ]
 
-function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpdate, onColorUpdate, onRemove, onClose }) {
+function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpdate, onColorUpdate, onLinkUpdate, onRemove, onClose }) {
   const [search, setSearch] = useState('')
   const [manufacturer, setManufacturer] = useState('all')
   const [discType, setDiscType] = useState('all')
   const [photoUrl, setPhotoUrl] = useState(currentSlot?.photo || '')
   const [plastic, setPlastic] = useState(currentSlot?.plastic || '')
   const [color, setColor] = useState(currentSlot?.color || '#7c3aed')
+  const [link, setLink] = useState(currentSlot?.link || '')
   const [selectedDiscId, setSelectedDiscId] = useState(currentSlot?.discId || null)
   const [appearanceMode, setAppearanceMode] = useState(currentSlot?.photo ? 'photo' : 'color')
   const fileInputRef = useRef(null)
@@ -351,6 +352,11 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpda
   const handlePlasticChange = (value) => {
     setPlastic(value)
     onPlasticUpdate(value || null)
+  }
+
+  const handleLinkChange = (value) => {
+    setLink(value)
+    onLinkUpdate(value || null)
   }
 
   const handleColorChange = (value) => {
@@ -479,6 +485,18 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpda
             value={plastic}
             onChange={e => handlePlasticChange(e.target.value)}
             className="plastic-input"
+          />
+        </div>
+
+        {/* Shop Link Section */}
+        <div className="picker-link-section">
+          <div className="link-label">Shop Link</div>
+          <input
+            type="url"
+            placeholder="Link to buy this disc..."
+            value={link}
+            onChange={e => handleLinkChange(e.target.value)}
+            className="link-input"
           />
         </div>
 

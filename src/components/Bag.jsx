@@ -11,6 +11,7 @@ function Bag({ bag, onSlotClick, getDiscById }) {
             photo={slot.photo}
             plastic={slot.plastic}
             color={slot.color}
+            link={slot.link}
             onClick={() => onSlotClick(index)}
           />
         ))}
