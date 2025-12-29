@@ -1,13 +1,24 @@
-function DiscSlot({ disc, photo, plastic, onClick }) {
+function DiscSlot({ disc, photo, plastic, color, onClick }) {
+  const discColor = color || '#7c3aed'
+
+  // Circle style - gradient for color mode, clean for photo mode
+  const circleStyle = photo ? {} : {
+    background: `radial-gradient(circle at 30% 30%,
+      rgba(255, 255, 255, 0.3) 0%,
+      ${discColor}80 40%,
+      ${discColor} 100%)`
+  }
+
   return (
-    <div className={`disc-slot ${disc ? 'filled' : 'empty'}`} onClick={onClick}>
+    <div
+      className={`disc-slot ${disc ? 'filled' : 'empty'}`}
+      onClick={onClick}
+    >
       {disc ? (
         <div className="disc-content">
-          {photo && (
-            <div className="disc-photo">
-              <img src={photo} alt={disc.name} />
-            </div>
-          )}
+          <div className="disc-circle" style={circleStyle}>
+            {photo && <img src={photo} alt={disc.name} />}
+          </div>
           <div className="disc-info">
             <div className="disc-name">{disc.name}</div>
             <div className="disc-manufacturer">{disc.manufacturer}</div>
@@ -23,7 +34,9 @@ function DiscSlot({ disc, photo, plastic, onClick }) {
         </div>
       ) : (
         <div className="disc-empty">
-          <span className="plus-icon">+</span>
+          <div className="empty-circle">
+            <span className="plus-icon">+</span>
+          </div>
           <span className="add-text">Add Disc</span>
         </div>
       )}

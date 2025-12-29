@@ -7,9 +7,9 @@ import discsData from './data/discs.json'
 const DEFAULT_BAG_SIZE = 12
 
 function App() {
-  // Each slot: { discId: number | null, photo: string | null, plastic: string | null }
+  // Each slot: { discId: number | null, photo: string | null, plastic: string | null, color: string | null }
   const [bag, setBag] = useState(() =>
-    Array(DEFAULT_BAG_SIZE).fill(null).map(() => ({ discId: null, photo: null, plastic: null }))
+    Array(DEFAULT_BAG_SIZE).fill(null).map(() => ({ discId: null, photo: null, plastic: null, color: null }))
   )
 
   const [pickerOpen, setPickerOpen] = useState(false)
@@ -43,7 +43,8 @@ function App() {
       newBag[activeSlot] = {
         discId,
         photo: photo !== null ? photo : prev[activeSlot]?.photo || null,
-        plastic: prev[activeSlot]?.plastic || null
+        plastic: prev[activeSlot]?.plastic || null,
+        color: prev[activeSlot]?.color || null
       }
       return newBag
     })
@@ -72,11 +73,21 @@ function App() {
     })
   }
 
+  const handleColorUpdate = (color) => {
+    if (activeSlot === null) return
+
+    setBag(prev => {
+      const newBag = [...prev]
+      newBag[activeSlot] = { ...prev[activeSlot], color }
+      return newBag
+    })
+  }
+
   const handleRemoveDisc = () => {
     if (activeSlot === null) return
     setBag(prev => {
       const newBag = [...prev]
-      newBag[activeSlot] = { discId: null, photo: null, plastic: null }
+      newBag[activeSlot] = { discId: null, photo: null, plastic: null, color: null }
       return newBag
     })
     setPickerOpen(false)
@@ -84,7 +95,7 @@ function App() {
   }
 
   const addSlot = () => {
-    setBag(prev => [...prev, { discId: null, photo: null, plastic: null }])
+    setBag(prev => [...prev, { discId: null, photo: null, plastic: null, color: null }])
   }
 
   const removeLastSlot = () => {
@@ -140,6 +151,7 @@ function App() {
           onSelect={handleDiscSelect}
           onPhotoUpdate={handlePhotoUpdate}
           onPlasticUpdate={handlePlasticUpdate}
+          onColorUpdate={handleColorUpdate}
           onRemove={handleRemoveDisc}
           onClose={() => {
             setPickerOpen(false)

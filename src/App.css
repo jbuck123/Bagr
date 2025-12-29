@@ -75,8 +75,10 @@ body {
 
 .bag-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+  justify-items: center;
+  padding: 10px 0;
 }
 
 /* Bag Controls */
@@ -110,114 +112,152 @@ body {
   cursor: not-allowed;
 }
 
-/* Disc Slot */
+/* Disc Slot - Card Design */
 .disc-slot {
-  background: rgba(255, 255, 255, 0.08);
-  border: 2px solid transparent;
+  min-width: 220px;
+  min-height: 320px;
   border-radius: 12px;
-  padding: 12px;
+  padding: 16px;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.disc-slot:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: #7c3aed;
-  transform: translateY(-2px);
+.disc-slot.filled {
+  background: rgba(30, 41, 59, 0.8);
+  border: 2px solid rgba(124, 58, 237, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.disc-slot.filled:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
 }
 
 .disc-slot.empty {
+  background: rgba(255, 255, 255, 0.03);
   border: 2px dashed #334155;
 }
 
 .disc-slot.empty:hover {
   border-color: #7c3aed;
-  border-style: dashed;
+  background: rgba(124, 58, 237, 0.1);
+  transform: translateY(-2px);
 }
 
 .disc-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
   color: #64748b;
 }
 
 .plus-icon {
-  font-size: 1.5rem;
+  font-size: 3rem;
   font-weight: 300;
+  line-height: 1;
+  color: #475569;
 }
 
 .add-text {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
+  color: #64748b;
 }
 
 .disc-content {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
+  gap: 12px;
 }
 
-.disc-photo {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 8px;
+.disc-circle {
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid rgba(124, 58, 237, 0.5);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.disc-photo img {
+.disc-circle img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
+.empty-circle {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 3px dashed #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
 .disc-info {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
 
 .disc-name {
   font-weight: 600;
-  font-size: 0.9rem;
-  margin-bottom: 2px;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .disc-manufacturer {
   color: #94a3b8;
-  font-size: 0.7rem;
-  margin-bottom: 2px;
+  font-size: 0.8rem;
+  line-height: 1.2;
 }
 
 .disc-plastic {
   color: #00d4ff;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  margin-bottom: 2px;
 }
 
 .disc-type {
-  color: #7c3aed;
-  font-size: 0.65rem;
-  margin-bottom: 6px;
+  color: #a78bfa;
+  font-size: 0.7rem;
+  font-weight: 500;
 }
 
 .disc-flight {
   display: flex;
   justify-content: center;
   gap: 4px;
+  margin-top: 4px;
 }
 
 .disc-flight span {
-  background: rgba(124, 58, 237, 0.3);
-  color: #c4b5fd;
-  padding: 2px 6px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 3px 6px;
   border-radius: 4px;
-  font-size: 0.7rem;
-  font-weight: 500;
+  font-size: 0.75rem;
+  font-weight: 600;
+  min-width: 22px;
+  text-align: center;
 }
 
 /* Share Section */
@@ -320,17 +360,56 @@ body {
   color: #fff;
 }
 
-/* Photo Section */
-.picker-photo-section {
+/* Appearance Section */
+.picker-appearance-section {
   padding: 16px 20px;
   border-bottom: 1px solid #334155;
 }
 
-.photo-label {
+.appearance-label {
   font-size: 0.85rem;
   font-weight: 600;
   color: #94a3b8;
   margin-bottom: 10px;
+}
+
+.appearance-toggle {
+  display: flex;
+  gap: 0;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #334155;
+}
+
+.appearance-option {
+  flex: 1;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.appearance-option:first-child {
+  border-right: 1px solid #334155;
+}
+
+.appearance-option:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.appearance-option.active {
+  background: rgba(124, 58, 237, 0.3);
+  color: #c4b5fd;
+}
+
+.photo-content {
+  margin-top: 12px;
 }
 
 .photo-controls {
@@ -383,6 +462,28 @@ body {
 
 .photo-url-input::placeholder {
   color: #64748b;
+}
+
+.photo-load-btn {
+  padding: 8px 16px;
+  background: #7c3aed;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.photo-load-btn:hover:not(:disabled) {
+  background: #6d28d9;
+}
+
+.photo-load-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .photo-preview {
@@ -452,6 +553,56 @@ body {
 
 .plastic-input::placeholder {
   color: #64748b;
+}
+
+/* Color Content (within appearance section) */
+.color-content {
+  margin-top: 12px;
+}
+
+.color-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.color-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.color-swatch:hover {
+  transform: scale(1.15);
+}
+
+.color-swatch.selected {
+  border-color: #fff;
+  box-shadow: 0 0 0 2px #7c3aed;
+}
+
+.color-custom {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px dashed #64748b;
+  cursor: pointer;
+  background: transparent;
+  padding: 0;
+}
+
+.color-custom::-webkit-color-swatch-wrapper {
+  padding: 2px;
+}
+
+.color-custom::-webkit-color-swatch {
+  border-radius: 50%;
+  border: none;
 }
 
 .picker-filters {
