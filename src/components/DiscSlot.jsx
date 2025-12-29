@@ -1,4 +1,4 @@
-function DiscSlot({ disc, photo, onClick }) {
+function DiscSlot({ disc, photo, plastic, onClick }) {
   return (
     <div className={`disc-slot ${disc ? 'filled' : 'empty'}`} onClick={onClick}>
       {disc ? (
@@ -11,6 +11,7 @@ function DiscSlot({ disc, photo, onClick }) {
           <div className="disc-info">
             <div className="disc-name">{disc.name}</div>
             <div className="disc-manufacturer">{disc.manufacturer}</div>
+            {plastic && <div className="disc-plastic">{plastic}</div>}
             <div className="disc-type">{disc.type}</div>
             <div className="disc-flight">
               <span>{disc.speed}</span>

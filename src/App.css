@@ -192,6 +192,13 @@ body {
   margin-bottom: 2px;
 }
 
+.disc-plastic {
+  color: #00d4ff;
+  font-size: 0.7rem;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
 .disc-type {
   color: #7c3aed;
   font-size: 0.65rem;
@@ -414,6 +421,39 @@ body {
   background: #dc2626;
 }
 
+/* Plastic Section */
+.picker-plastic-section {
+  padding: 12px 20px;
+  border-bottom: 1px solid #334155;
+}
+
+.plastic-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+
+.plastic-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid #334155;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.plastic-input:focus {
+  outline: none;
+  border-color: #00d4ff;
+}
+
+.plastic-input::placeholder {
+  color: #64748b;
+}
+
 .picker-filters {
   display: flex;
   gap: 10px;
@@ -586,6 +626,36 @@ body {
   text-align: center;
   color: #64748b;
   padding: 40px 20px;
+}
+
+/* Picker Actions */
+.picker-actions {
+  padding: 16px 20px;
+  border-top: 1px solid #334155;
+  background: #1e293b;
+}
+
+.picker-save-btn {
+  width: 100%;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.picker-save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+}
+
+.picker-save-btn:active {
+  transform: translateY(0);
 }
 
 /* Responsive */

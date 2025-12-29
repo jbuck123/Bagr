@@ -1,10 +1,12 @@
 import { useState, useMemo, useRef } from 'react'
 
-function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onRemove, onClose }) {
+function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpdate, onRemove, onClose }) {
   const [search, setSearch] = useState('')
   const [manufacturer, setManufacturer] = useState('all')
   const [discType, setDiscType] = useState('all')
   const [photoUrl, setPhotoUrl] = useState(currentSlot?.photo || '')
+  const [plastic, setPlastic] = useState(currentSlot?.plastic || '')
+  const [selectedDiscId, setSelectedDiscId] = useState(currentSlot?.discId || null)
   const fileInputRef = useRef(null)
 
   const manufacturers = useMemo(() => {
@@ -52,6 +54,19 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onRemove, onC
     }
   }
 
+  const handlePlasticChange = (value) => {
+    setPlastic(value)
+    onPlasticUpdate(value || null)
+  }
+
+  const handleSave = () => {
+    if (selectedDiscId) {
+      onSelect(selectedDiscId)
+    } else {
+      onClose()
+    }
+  }
+
   return (
     <div className="picker-overlay" onClick={onClose}>
       <div className="picker-modal" onClick={e => e.stopPropagation()}>
@@ -92,6 +107,18 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onRemove, onC
           )}
         </div>
 
+        {/* Plastic Section */}
+        <div className="picker-plastic-section">
+          <div className="plastic-label">Plastic Type</div>
+          <input
+            type="text"
+            placeholder="e.g., Star, Champion, ESP, K1..."
+            value={plastic}
+            onChange={e => handlePlasticChange(e.target.value)}
+            className="plastic-input"
+          />
+        </div>
+
         <div className="picker-filters">
           <input
             type="text"
@@ -99,6 +126,7 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onRemove, onC
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="picker-search"
+            autoFocus
           />
           <select
             value={discType}
@@ -129,30 +157,39 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onRemove, onC
         )}
 
         <div className="picker-list">
-          {filteredDiscs.map(disc => (
-            <div
-              key={disc.id}
-              className={`picker-item ${currentSlot?.discId === disc.id ? 'selected' : ''}`}
-              onClick={() => onSelect(disc.id)}
-            >
-              <div className="picker-item-info">
-                <div className="picker-item-name">{disc.name}</div>
-                <div className="picker-item-meta">
-                  <span className="picker-item-manufacturer">{disc.manufacturer}</span>
-                  <span className="picker-item-type">{disc.type}</span>
+          {search.trim() === '' ? (
+            <div className="picker-empty">Start typing to search for discs...</div>
+          ) : filteredDiscs.length === 0 ? (
+            <div className="picker-empty">No discs found</div>
+          ) : (
+            filteredDiscs.map(disc => (
+              <div
+                key={disc.id}
+                className={`picker-item ${selectedDiscId === disc.id ? 'selected' : ''}`}
+                onClick={() => setSelectedDiscId(disc.id)}
+              >
+                <div className="picker-item-info">
+                  <div className="picker-item-name">{disc.name}</div>
+                  <div className="picker-item-meta">
+                    <span className="picker-item-manufacturer">{disc.manufacturer}</span>
+                    <span className="picker-item-type">{disc.type}</span>
+                  </div>
+                </div>
+                <div className="picker-item-flight">
+                  <span title="Speed">{disc.speed}</span>
+                  <span title="Glide">{disc.glide}</span>
+                  <span title="Turn">{disc.turn}</span>
+                  <span title="Fade">{disc.fade}</span>
                 </div>
               </div>
-              <div className="picker-item-flight">
-                <span title="Speed">{disc.speed}</span>
-                <span title="Glide">{disc.glide}</span>
-                <span title="Turn">{disc.turn}</span>
-                <span title="Fade">{disc.fade}</span>
-              </div>
-            </div>
-          ))}
-          {filteredDiscs.length === 0 && (
-            <div className="picker-empty">No discs found</div>
+            ))
           )}
+        </div>
+
+        <div className="picker-actions">
+          <button className="picker-save-btn" onClick={handleSave}>
+            {selectedDiscId ? 'Save' : 'Done'}
+          </button>
         </div>
       </div>
     </div>

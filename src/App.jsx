@@ -7,9 +7,9 @@ import discsData from './data/discs.json'
 const DEFAULT_BAG_SIZE = 12
 
 function App() {
-  // Each slot: { discId: number | null, photo: string | null }
+  // Each slot: { discId: number | null, photo: string | null, plastic: string | null }
   const [bag, setBag] = useState(() =>
-    Array(DEFAULT_BAG_SIZE).fill(null).map(() => ({ discId: null, photo: null }))
+    Array(DEFAULT_BAG_SIZE).fill(null).map(() => ({ discId: null, photo: null, plastic: null }))
   )
 
   const [pickerOpen, setPickerOpen] = useState(false)
@@ -42,7 +42,8 @@ function App() {
       const newBag = [...prev]
       newBag[activeSlot] = {
         discId,
-        photo: photo !== null ? photo : prev[activeSlot]?.photo || null
+        photo: photo !== null ? photo : prev[activeSlot]?.photo || null,
+        plastic: prev[activeSlot]?.plastic || null
       }
       return newBag
     })
@@ -61,11 +62,21 @@ function App() {
     })
   }
 
+  const handlePlasticUpdate = (plastic) => {
+    if (activeSlot === null) return
+
+    setBag(prev => {
+      const newBag = [...prev]
+      newBag[activeSlot] = { ...prev[activeSlot], plastic }
+      return newBag
+    })
+  }
+
   const handleRemoveDisc = () => {
     if (activeSlot === null) return
     setBag(prev => {
       const newBag = [...prev]
-      newBag[activeSlot] = { discId: null, photo: null }
+      newBag[activeSlot] = { discId: null, photo: null, plastic: null }
       return newBag
     })
     setPickerOpen(false)
@@ -73,7 +84,7 @@ function App() {
   }
 
   const addSlot = () => {
-    setBag(prev => [...prev, { discId: null, photo: null }])
+    setBag(prev => [...prev, { discId: null, photo: null, plastic: null }])
   }
 
   const removeLastSlot = () => {
@@ -128,6 +139,7 @@ function App() {
           currentSlot={activeSlot !== null ? bag[activeSlot] : null}
           onSelect={handleDiscSelect}
           onPhotoUpdate={handlePhotoUpdate}
+          onPlasticUpdate={handlePlasticUpdate}
           onRemove={handleRemoveDisc}
           onClose={() => {
             setPickerOpen(false)

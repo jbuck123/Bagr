@@ -9,6 +9,7 @@ function Bag({ bag, onSlotClick, getDiscById }) {
             key={index}
             disc={slot.discId ? getDiscById(slot.discId) : null}
             photo={slot.photo}
+            plastic={slot.plastic}
             onClick={() => onSlotClick(index)}
           />
         ))}
