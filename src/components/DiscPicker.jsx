@@ -275,15 +275,45 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpda
   const discTypes = ['Distance Driver', 'Fairway Driver', 'Midrange', 'Putter']
 
   const filteredDiscs = useMemo(() => {
+    const searchLower = search.toLowerCase().trim()
+
     return discs
       .filter(d => {
-        const matchesSearch = d.name.toLowerCase().includes(search.toLowerCase()) ||
-                              d.manufacturer.toLowerCase().includes(search.toLowerCase())
+        const matchesSearch = d.name.toLowerCase().includes(searchLower) ||
+                              d.manufacturer.toLowerCase().includes(searchLower)
         const matchesManufacturer = manufacturer === 'all' || d.manufacturer === manufacturer
         const matchesType = discType === 'all' || d.type === discType
         return matchesSearch && matchesManufacturer && matchesType
       })
-      .sort((a, b) => a.name.localeCompare(b.name))
+      .sort((a, b) => {
+        // If no search, sort alphabetically
+        if (!searchLower) return a.name.localeCompare(b.name)
+
+        const aName = a.name.toLowerCase()
+        const bName = b.name.toLowerCase()
+
+        // Exact match first
+        const aExact = aName === searchLower
+        const bExact = bName === searchLower
+        if (aExact && !bExact) return -1
+        if (bExact && !aExact) return 1
+
+        // Prefix match second (name starts with search term)
+        const aPrefix = aName.startsWith(searchLower)
+        const bPrefix = bName.startsWith(searchLower)
+        if (aPrefix && !bPrefix) return -1
+        if (bPrefix && !aPrefix) return 1
+
+        // Word boundary match third (search term appears after a space)
+        const aWordBoundary = aName.includes(' ' + searchLower)
+        const bWordBoundary = bName.includes(' ' + searchLower)
+        if (aWordBoundary && !bWordBoundary) return -1
+        if (bWordBoundary && !aWordBoundary) return 1
+
+        // Finally, sort by name length (shorter names first) then alphabetically
+        if (aName.length !== bName.length) return aName.length - bName.length
+        return aName.localeCompare(bName)
+      })
   }, [discs, search, manufacturer, discType])
 
   const analyzeAndSetColor = useCallback(async (imageUrl) => {
@@ -507,7 +537,6 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpda
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="picker-search"
-            autoFocus
           />
           <select
             value={discType}

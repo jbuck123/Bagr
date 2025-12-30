@@ -3,6 +3,7 @@ import Bag from './components/Bag'
 import DiscPicker from './components/DiscPicker'
 import ShareButton from './components/ShareButton'
 import discsData from './data/discs.json'
+import Logo from './data/Logos/bagr-circle-v4.svg'
 
 const DEFAULT_BAG_SIZE = 12
 
@@ -126,8 +127,7 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1 className="logo">Bagr</h1>
-        <p className="tagline">Build & Share Your Disc Golf Bag</p>
+        <img src={Logo} alt="Bagr - Disc Golf Companion" className="logo-image" />
       </header>
 
       <div className="player-name-section">
