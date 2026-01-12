@@ -16,6 +16,7 @@ function App() {
   const [pickerOpen, setPickerOpen] = useState(false)
   const [activeSlot, setActiveSlot] = useState(null)
   const [playerName, setPlayerName] = useState('')
+  const [isSharedBag, setIsSharedBag] = useState(false)
 
   // Load bag from URL on mount
   useEffect(() => {
@@ -25,11 +26,16 @@ function App() {
         const data = JSON.parse(decodeURIComponent(hash.slice(5)))
         if (data.bag) setBag(data.bag)
         if (data.name) setPlayerName(data.name)
+        setIsSharedBag(true)
       } catch (e) {
         console.error('Failed to parse bag from URL')
       }
     }
   }, [])
+
+  const handleCreateNewBag = () => {
+    window.location.href = window.location.origin + window.location.pathname
+  }
 
   const handleSlotClick = (slotIndex) => {
     setActiveSlot(slotIndex)
@@ -130,30 +136,42 @@ function App() {
         <img src={Logo} alt="Bagr - Disc Golf Companion" className="logo-image" />
       </header>
 
-      <div className="player-name-section">
-        <input
-          type="text"
-          placeholder="Your name (optional)"
-          value={playerName}
-          onChange={(e) => setPlayerName(e.target.value)}
-          className="player-name-input"
-        />
-      </div>
+      {isSharedBag && (
+        <div className="shared-bag-banner">
+          <span>{playerName ? `${playerName}'s Bag` : 'Shared Bag'}</span>
+          <button className="create-new-btn" onClick={handleCreateNewBag}>Create New Bag</button>
+        </div>
+      )}
+
+      {!isSharedBag && (
+        <div className="player-name-section">
+          <input
+            type="text"
+            placeholder="Your name (optional)"
+            value={playerName}
+            onChange={(e) => setPlayerName(e.target.value)}
+            className="player-name-input"
+          />
+        </div>
+      )}
 
       <Bag
         bag={bag}
-        onSlotClick={handleSlotClick}
+        onSlotClick={isSharedBag ? undefined : handleSlotClick}
         getDiscById={getDiscById}
+        readOnly={isSharedBag}
       />
 
-      <div className="bag-controls">
-        <button className="bag-control-btn" onClick={addSlot}>+ Add Slot</button>
-        <button className="bag-control-btn" onClick={removeLastSlot} disabled={bag.length <= 1}>
-          − Remove Slot
-        </button>
-      </div>
+      {!isSharedBag && (
+        <div className="bag-controls">
+          <button className="bag-control-btn" onClick={addSlot}>+ Add Slot</button>
+          <button className="bag-control-btn" onClick={removeLastSlot} disabled={bag.length <= 1}>
+            − Remove Slot
+          </button>
+        </div>
+      )}
 
-      <ShareButton generateUrl={generateShareUrl} />
+      {!isSharedBag && <ShareButton generateUrl={generateShareUrl} />}
 
       {pickerOpen && (
         <DiscPicker

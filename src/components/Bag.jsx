@@ -1,6 +1,6 @@
 import DiscSlot from './DiscSlot'
 
-function Bag({ bag, onSlotClick, getDiscById }) {
+function Bag({ bag, onSlotClick, getDiscById, readOnly }) {
   return (
     <div className="bag">
       <div className="bag-grid">
@@ -12,7 +12,8 @@ function Bag({ bag, onSlotClick, getDiscById }) {
             plastic={slot.plastic}
             color={slot.color}
             link={slot.link}
-            onClick={() => onSlotClick(index)}
+            onClick={onSlotClick ? () => onSlotClick(index) : undefined}
+            readOnly={readOnly}
           />
         ))}
       </div>

@@ -1,4 +1,4 @@
-function DiscSlot({ disc, photo, plastic, color, link, onClick }) {
+function DiscSlot({ disc, photo, plastic, color, link, onClick, readOnly }) {
   const discColor = color || '#6366F1'
 
   // Circle style - gradient for color mode, clean for photo mode
@@ -16,10 +16,15 @@ function DiscSlot({ disc, photo, plastic, color, link, onClick }) {
     }
   }
 
+  // Don't render empty slots in read-only mode
+  if (readOnly && !disc) {
+    return null
+  }
+
   return (
     <div
-      className={`disc-slot ${disc ? 'filled' : 'empty'}`}
-      onClick={onClick}
+      className={`disc-slot ${disc ? 'filled' : 'empty'} ${readOnly ? 'read-only' : ''}`}
+      onClick={readOnly ? undefined : onClick}
     >
       {disc ? (
         <div className="disc-content">

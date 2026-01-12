@@ -168,6 +168,7 @@ const cropDiscFromImage = (imageUrl) => {
 }
 
 // Extract dominant color from an image
+// For Halo plastic discs, focuses on the CENTER to avoid picking up rim color
 const extractDominantColor = (imageUrl) => {
   return new Promise((resolve) => {
     const img = new Image()
@@ -178,7 +179,7 @@ const extractDominantColor = (imageUrl) => {
       const ctx = canvas.getContext('2d')
 
       // Sample a smaller version for performance
-      const sampleSize = 50
+      const sampleSize = 100
       canvas.width = sampleSize
       canvas.height = sampleSize
 
@@ -190,32 +191,47 @@ const extractDominantColor = (imageUrl) => {
 
         // Color buckets for averaging
         const colorCounts = {}
+        const centerX = sampleSize / 2
+        const centerY = sampleSize / 2
+        // Only sample the center 60% of the disc to avoid Halo rims
+        const maxSampleRadius = sampleSize * 0.30
 
-        for (let i = 0; i < data.length; i += 4) {
-          const r = data[i]
-          const g = data[i + 1]
-          const b = data[i + 2]
-          const a = data[i + 3]
+        for (let y = 0; y < sampleSize; y++) {
+          for (let x = 0; x < sampleSize; x++) {
+            // Calculate distance from center
+            const dx = x - centerX
+            const dy = y - centerY
+            const distance = Math.sqrt(dx * dx + dy * dy)
 
-          // Skip transparent pixels
-          if (a < 128) continue
+            // Skip pixels outside the center circle (avoids Halo rim)
+            if (distance > maxSampleRadius) continue
 
-          // Skip very dark or very light pixels (likely background)
-          const brightness = (r + g + b) / 3
-          if (brightness < 30 || brightness > 240) continue
+            const i = (y * sampleSize + x) * 4
+            const r = data[i]
+            const g = data[i + 1]
+            const b = data[i + 2]
+            const a = data[i + 3]
 
-          // Quantize colors to reduce noise (group similar colors)
-          const qr = Math.round(r / 32) * 32
-          const qg = Math.round(g / 32) * 32
-          const qb = Math.round(b / 32) * 32
+            // Skip transparent pixels
+            if (a < 128) continue
 
-          const key = `${qr},${qg},${qb}`
-          colorCounts[key] = (colorCounts[key] || 0) + 1
+            // Skip very dark or very light pixels (likely background/reflections)
+            const brightness = (r + g + b) / 3
+            if (brightness < 30 || brightness > 240) continue
+
+            // Quantize colors to reduce noise (group similar colors)
+            const qr = Math.round(r / 32) * 32
+            const qg = Math.round(g / 32) * 32
+            const qb = Math.round(b / 32) * 32
+
+            const key = `${qr},${qg},${qb}`
+            colorCounts[key] = (colorCounts[key] || 0) + 1
+          }
         }
 
         // Find most common color
         let maxCount = 0
-        let dominantColor = '124,58,237' // Default purple
+        let dominantColor = '99,102,241' // Default indigo
 
         for (const [color, count] of Object.entries(colorCounts)) {
           if (count > maxCount) {
@@ -230,12 +246,12 @@ const extractDominantColor = (imageUrl) => {
         resolve(hex)
       } catch (e) {
         // CORS or other error, return default
-        resolve('#7c3aed')
+        resolve('#6366F1')
       }
     }
 
     img.onerror = () => {
-      resolve('#7c3aed')
+      resolve('#6366F1')
     }
 
     img.src = imageUrl
