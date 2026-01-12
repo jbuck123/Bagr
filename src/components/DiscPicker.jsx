@@ -243,10 +243,10 @@ const extractDominantColor = (imageUrl) => {
 }
 
 const DISC_COLORS = [
-  { name: 'Purple', value: '#7c3aed' },
+  { name: 'Indigo', value: '#6366F1' },
   { name: 'Blue', value: '#3b82f6' },
-  { name: 'Cyan', value: '#06b6d4' },
-  { name: 'Green', value: '#22c55e' },
+  { name: 'Cyan', value: '#22D3EE' },
+  { name: 'Green', value: '#10B981' },
   { name: 'Yellow', value: '#eab308' },
   { name: 'Orange', value: '#f97316' },
   { name: 'Red', value: '#ef4444' },

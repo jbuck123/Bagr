@@ -1,5 +1,5 @@
 function DiscSlot({ disc, photo, plastic, color, link, onClick }) {
-  const discColor = color || '#7c3aed'
+  const discColor = color || '#6366F1'
 
   // Circle style - gradient for color mode, clean for photo mode
   const circleStyle = photo ? {} : {
