@@ -3,7 +3,7 @@ import Bag from './components/Bag'
 import DiscPicker from './components/DiscPicker'
 import ShareButton from './components/ShareButton'
 import discsData from './data/discs.json'
-import Logo from './data/Logos/bagr-circle-v4.svg'
+import Logo from './data/Logos/DG_Bag_logo_transparent_1.png'
 
 const DEFAULT_BAG_SIZE = 12
 
