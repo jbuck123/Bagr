@@ -1,0 +1,46 @@
+<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- BAGR Circle Logo v5 - Versatile (works on any background) -->
+
+  <!-- Outer circle -->
+  <circle cx="150" cy="150" r="140" fill="none" stroke="currentColor" stroke-width="3"/>
+
+  <!-- Inner decorative circle -->
+  <circle cx="150" cy="150" r="120" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+
+  <g transform="translate(150, 150)">
+    <!-- Small text above -->
+    <text x="0" y="-50"
+          text-anchor="middle"
+          font-family="'Inter', 'SF Pro Display', system-ui, sans-serif"
+          font-size="14"
+          font-weight="600"
+          fill="currentColor"
+          opacity="0.5"
+          letter-spacing="6">DISC GOLF</text>
+
+    <!-- Main wordmark -->
+    <text x="0" y="15"
+          text-anchor="middle"
+          font-family="'Inter', 'SF Pro Display', system-ui, sans-serif"
+          font-size="72"
+          font-weight="800"
+          fill="currentColor"
+          letter-spacing="8">BAGR</text>
+
+    <!-- Accent line -->
+    <line x1="-80" y1="45" x2="80" y2="45" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+
+    <!-- Disc accent -->
+    <circle cx="0" cy="45" r="6" fill="#6366F1"/>
+
+    <!-- Small text below -->
+    <text x="0" y="75"
+          text-anchor="middle"
+          font-family="'Inter', 'SF Pro Display', system-ui, sans-serif"
+          font-size="12"
+          font-weight="500"
+          fill="currentColor"
+          opacity="0.5"
+          letter-spacing="4">BAG BUILDER</text>
+  </g>
+</svg>

@@ -1,0 +1,11 @@
+Task,Status
+Mobile overhaul - buttons not registering on mobile,☑
+Mobile overhaul - scrolling is buggy,☑
+Mobile overhaul - Disc Add screen not mobile-friendly,☑
+Mobile overhaul - body scroll locks when modal is open,☑
+Mobile overhaul - touch targets increased to 44px minimum,☑
+Mobile overhaul - photo controls stack vertically on mobile,☑
+Mobile overhaul - inputs use 16px font to prevent iOS zoom,☑
+Mobile overhaul - search results visible above keyboard,☑
+
+

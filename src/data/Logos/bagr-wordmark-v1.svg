@@ -1,0 +1,15 @@
+<svg width="200" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+  <!-- BAGR Wordmark - Versatile text-based logo -->
+
+  <!-- Main wordmark -->
+  <text x="100" y="38"
+        text-anchor="middle"
+        font-family="'Inter', 'SF Pro Display', 'Helvetica Neue', system-ui, sans-serif"
+        font-size="42"
+        font-weight="700"
+        fill="currentColor"
+        letter-spacing="4">BAGR</text>
+
+  <!-- Disc accent replacing the A crossbar -->
+  <circle cx="68" cy="32" r="4" fill="#6366F1"/>
+</svg>

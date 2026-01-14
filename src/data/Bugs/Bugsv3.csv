@@ -1,0 +1,11 @@
+Task,Status
+Sharing logic - native mobile share dialog (Web Share API),☑
+Sharing logic - read-only bag links,☑
+Search UI - keyboard visibility fix (from v2),☑
+Search UI - debounced search for performance,☑
+Search UI - limited to 50 results for performance,☑
+Search UI - memoized disc items,☑
+Mobile lag - performance optimizations applied,☑
+UI zoom - viewport locked to prevent zoom,☑
+UI zoom - centered layout with proper overflow handling,☑
+Clear bag - added Clear Bag button with confirmation,☑
