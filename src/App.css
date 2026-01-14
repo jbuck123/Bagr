@@ -893,6 +893,7 @@ body {
   flex: 1;
   overflow-y: auto;
   padding: var(--spacing-sm) var(--spacing-lg);
+  padding-bottom: 300px; /* Extra space to scroll results above mobile keyboard */
   -webkit-overflow-scrolling: touch;
   min-height: 200px;
   touch-action: pan-y;
@@ -1127,6 +1128,21 @@ body {
   /* Picker filters single column on small screens */
   .picker-filter-row {
     flex-direction: column;
+  }
+
+  /* Make filters sticky so search stays visible when keyboard opens */
+  .picker-filters {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  /* Collapse appearance and other sections when keyboard might be open */
+  .picker-appearance-section,
+  .picker-plastic-section,
+  .picker-link-section {
+    max-height: 200px;
+    overflow-y: auto;
   }
 
   /* Ensure save button is easy to tap */
