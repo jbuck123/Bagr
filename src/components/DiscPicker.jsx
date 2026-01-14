@@ -1,4 +1,6 @@
-import { useState, useMemo, useRef, useCallback, useEffect } from 'react'
+import { useState, useMemo, useRef, useCallback, useEffect, memo } from 'react'
+
+const MAX_DISPLAYED_DISCS = 50 // Limit for performance
 
 // Detect disc edges and crop image to fill circle
 // Handles multi-colored discs (Halo plastic) and black rims (MVP, etc.)
@@ -271,8 +273,33 @@ const DISC_COLORS = [
   { name: 'Gray', value: '#64748b' },
 ]
 
+// Memoized disc item for performance
+const DiscItem = memo(function DiscItem({ disc, isSelected, onSelect }) {
+  return (
+    <div
+      className={`picker-item ${isSelected ? 'selected' : ''}`}
+      onClick={() => onSelect(disc.id)}
+    >
+      <div className="picker-item-info">
+        <div className="picker-item-name">{disc.name}</div>
+        <div className="picker-item-meta">
+          <span className="picker-item-manufacturer">{disc.manufacturer}</span>
+          <span className="picker-item-type">{disc.type}</span>
+        </div>
+      </div>
+      <div className="picker-item-flight">
+        <span title="Speed">{disc.speed}</span>
+        <span title="Glide">{disc.glide}</span>
+        <span title="Turn">{disc.turn}</span>
+        <span title="Fade">{disc.fade}</span>
+      </div>
+    </div>
+  )
+})
+
 function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpdate, onColorUpdate, onLinkUpdate, onRemove, onClose }) {
   const [search, setSearch] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
   const [manufacturer, setManufacturer] = useState('all')
   const [discType, setDiscType] = useState('all')
   const [photoUrl, setPhotoUrl] = useState(currentSlot?.photo || '')
@@ -296,6 +323,14 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpda
     }
   }, [])
 
+  // Debounce search for performance
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search)
+    }, 150)
+    return () => clearTimeout(timer)
+  }, [search])
+
   const manufacturers = useMemo(() => {
     const uniqueManufacturers = [...new Set(discs.map(d => d.manufacturer))]
     return uniqueManufacturers.sort()
@@ -304,9 +339,9 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpda
   const discTypes = ['Distance Driver', 'Fairway Driver', 'Midrange', 'Putter']
 
   const filteredDiscs = useMemo(() => {
-    const searchLower = search.toLowerCase().trim()
+    const searchLower = debouncedSearch.toLowerCase().trim()
 
-    return discs
+    const filtered = discs
       .filter(d => {
         const matchesSearch = d.name.toLowerCase().includes(searchLower) ||
                               d.manufacturer.toLowerCase().includes(searchLower)
@@ -343,7 +378,22 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpda
         if (aName.length !== bName.length) return aName.length - bName.length
         return aName.localeCompare(bName)
       })
-  }, [discs, search, manufacturer, discType])
+
+    // Limit results for performance
+    return filtered.slice(0, MAX_DISPLAYED_DISCS)
+  }, [discs, debouncedSearch, manufacturer, discType])
+
+  const hasMoreResults = useMemo(() => {
+    const searchLower = debouncedSearch.toLowerCase().trim()
+    const count = discs.filter(d => {
+      const matchesSearch = d.name.toLowerCase().includes(searchLower) ||
+                            d.manufacturer.toLowerCase().includes(searchLower)
+      const matchesManufacturer = manufacturer === 'all' || d.manufacturer === manufacturer
+      const matchesType = discType === 'all' || d.type === discType
+      return matchesSearch && matchesManufacturer && matchesType
+    }).length
+    return count > MAX_DISPLAYED_DISCS
+  }, [discs, debouncedSearch, manufacturer, discType])
 
   const analyzeAndSetColor = useCallback(async (imageUrl) => {
     if (imageUrl) {
@@ -618,27 +668,21 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpda
           ) : filteredDiscs.length === 0 ? (
             <div className="picker-empty">No discs found</div>
           ) : (
-            filteredDiscs.map(disc => (
-              <div
-                key={disc.id}
-                className={`picker-item ${selectedDiscId === disc.id ? 'selected' : ''}`}
-                onClick={() => setSelectedDiscId(disc.id)}
-              >
-                <div className="picker-item-info">
-                  <div className="picker-item-name">{disc.name}</div>
-                  <div className="picker-item-meta">
-                    <span className="picker-item-manufacturer">{disc.manufacturer}</span>
-                    <span className="picker-item-type">{disc.type}</span>
-                  </div>
+            <>
+              {filteredDiscs.map(disc => (
+                <DiscItem
+                  key={disc.id}
+                  disc={disc}
+                  isSelected={selectedDiscId === disc.id}
+                  onSelect={setSelectedDiscId}
+                />
+              ))}
+              {hasMoreResults && (
+                <div className="picker-more-results">
+                  Refine your search to see more results
                 </div>
-                <div className="picker-item-flight">
-                  <span title="Speed">{disc.speed}</span>
-                  <span title="Glide">{disc.glide}</span>
-                  <span title="Turn">{disc.turn}</span>
-                  <span title="Fade">{disc.fade}</span>
-                </div>
-              </div>
-            ))
+              )}
+            </>
           )}
         </div>
 

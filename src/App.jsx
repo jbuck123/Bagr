@@ -122,6 +122,12 @@ function App() {
     }
   }
 
+  const clearBag = () => {
+    if (window.confirm('Clear all discs from your bag?')) {
+      setBag(Array(DEFAULT_BAG_SIZE).fill(null).map(() => ({ discId: null, photo: null, plastic: null, color: null, link: null })))
+    }
+  }
+
   const generateShareUrl = () => {
     const data = { bag, name: playerName }
     const encoded = encodeURIComponent(JSON.stringify(data))
@@ -168,10 +174,13 @@ function App() {
           <button className="bag-control-btn" onClick={removeLastSlot} disabled={bag.length <= 1}>
             − Remove Slot
           </button>
+          <button className="bag-control-btn clear-btn" onClick={clearBag}>
+            Clear Bag
+          </button>
         </div>
       )}
 
-      {!isSharedBag && <ShareButton generateUrl={generateShareUrl} />}
+      {!isSharedBag && <ShareButton generateUrl={generateShareUrl} playerName={playerName} />}
 
       {pickerOpen && (
         <DiscPicker

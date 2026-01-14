@@ -54,18 +54,37 @@
   box-sizing: border-box;
 }
 
+html {
+  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--bg-primary);
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
   color: var(--text-primary);
+  overflow-x: hidden;
+  width: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
 }
 
 .app {
   max-width: 900px;
+  width: 100%;
   margin: 0 auto;
   padding: var(--spacing-md);
   padding-bottom: 100px;
+  flex: 1;
 }
 
 /* Header */
@@ -216,6 +235,16 @@ body {
 .bag-control-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.bag-control-btn.clear-btn {
+  border-color: rgba(239, 68, 68, 0.3);
+  color: var(--accent-danger);
+}
+
+.bag-control-btn.clear-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: var(--accent-danger);
 }
 
 /* Disc Slot - Card Design */
@@ -991,6 +1020,15 @@ body {
   text-align: center;
   color: var(--text-muted);
   padding: 40px var(--spacing-lg);
+}
+
+.picker-more-results {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: var(--spacing-md);
+  font-size: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: var(--spacing-sm);
 }
 
 /* Picker Actions */
