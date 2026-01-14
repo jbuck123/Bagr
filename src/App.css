@@ -449,6 +449,8 @@ body {
   align-items: flex-end;
   justify-content: center;
   z-index: 100;
+  touch-action: none;
+  overscroll-behavior: contain;
 }
 
 .picker-modal {
@@ -462,6 +464,8 @@ body {
   animation: slideUp 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-bottom: none;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
 }
 
 @keyframes slideUp {
@@ -891,6 +895,8 @@ body {
   padding: var(--spacing-sm) var(--spacing-lg);
   -webkit-overflow-scrolling: touch;
   min-height: 200px;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
 }
 
 .picker-item {
@@ -905,6 +911,7 @@ body {
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   position: relative;
+  touch-action: manipulation;
 }
 
 .picker-item:hover {
@@ -1027,5 +1034,127 @@ body {
     border-radius: var(--radius-lg);
     max-height: 80vh;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Mobile Touch Improvements */
+@media (max-width: 767px) {
+  /* Prevent body scrolling when modal is open */
+  body.modal-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Improve touch targets for all buttons */
+  button,
+  .appearance-option,
+  .color-swatch,
+  .photo-upload-btn,
+  .photo-load-btn,
+  .picker-save-btn,
+  .picker-close,
+  .remove-disc-btn,
+  .bag-control-btn,
+  .share-button {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 44px;
+  }
+
+  /* Picker item needs larger touch target on mobile */
+  .picker-item {
+    min-height: 56px;
+    padding: var(--spacing-md);
+  }
+
+  /* Improve appearance toggle buttons on mobile */
+  .appearance-option {
+    min-height: 48px;
+    font-size: 0.9rem;
+  }
+
+  /* Ensure inputs are easy to tap */
+  input,
+  select {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 44px;
+    font-size: 16px; /* Prevents iOS zoom on focus */
+  }
+
+  /* Color swatches need to be larger on mobile */
+  .color-swatch,
+  .color-custom {
+    width: 44px;
+    height: 44px;
+  }
+
+  /* Photo controls stacked on mobile */
+  .photo-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .photo-upload-btn {
+    width: 100%;
+    text-align: center;
+    padding: var(--spacing-md);
+  }
+
+  .photo-or {
+    text-align: center;
+    padding: var(--spacing-xs) 0;
+  }
+
+  .photo-url-input {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .photo-load-btn {
+    width: 100%;
+    padding: var(--spacing-md);
+  }
+
+  /* Picker modal full-height on mobile for better usability */
+  .picker-modal {
+    max-height: 95vh;
+    height: 95vh;
+  }
+
+  /* Picker filters single column on small screens */
+  .picker-filter-row {
+    flex-direction: column;
+  }
+
+  /* Ensure save button is easy to tap */
+  .picker-save-btn {
+    min-height: 52px;
+    font-size: 1.1rem;
+  }
+
+  /* Disc slots have good touch targets */
+  .disc-slot {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Add active states for mobile feedback */
+  .picker-item:active {
+    background: rgba(99, 102, 241, 0.2);
+  }
+
+  .appearance-option:active {
+    opacity: 0.8;
+  }
+
+  .picker-save-btn:active {
+    transform: scale(0.98);
+  }
+
+  .color-swatch:active {
+    transform: scale(1.1);
   }
 }

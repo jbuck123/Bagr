@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useCallback } from 'react'
+import { useState, useMemo, useRef, useCallback, useEffect } from 'react'
 
 // Detect disc edges and crop image to fill circle
 // Handles multi-colored discs (Halo plastic) and black rims (MVP, etc.)
@@ -283,6 +283,19 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpda
   const [appearanceMode, setAppearanceMode] = useState(currentSlot?.photo ? 'photo' : 'color')
   const fileInputRef = useRef(null)
 
+  // Lock body scroll when modal is open (mobile fix)
+  useEffect(() => {
+    const scrollY = window.scrollY
+    document.body.classList.add('modal-open')
+    document.body.style.top = `-${scrollY}px`
+
+    return () => {
+      document.body.classList.remove('modal-open')
+      document.body.style.top = ''
+      window.scrollTo(0, scrollY)
+    }
+  }, [])
+
   const manufacturers = useMemo(() => {
     const uniqueManufacturers = [...new Set(discs.map(d => d.manufacturer))]
     return uniqueManufacturers.sort()
@@ -432,8 +445,25 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpda
     }
   }
 
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose()
+    }
+  }
+
+  const handleTouchMove = (e) => {
+    // Prevent background scroll on overlay touch
+    if (e.target === e.currentTarget) {
+      e.preventDefault()
+    }
+  }
+
   return (
-    <div className="picker-overlay" onClick={onClose}>
+    <div
+      className="picker-overlay"
+      onClick={handleOverlayClick}
+      onTouchMove={handleTouchMove}
+    >
       <div className="picker-modal" onClick={e => e.stopPropagation()}>
         <div className="picker-header">
           <h3>Select Disc</h3>
