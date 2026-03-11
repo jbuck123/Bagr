@@ -1,0 +1,79 @@
+{
+  "bags": [
+    {
+      "name": "Innova Sample Bag",
+      "manufacturer": "Innova",
+      "playerName": "Innova Team",
+      "slots": [
+        { "discId": 189, "photo": null, "plastic": "Star", "color": "#ef4444", "link": null },
+        { "discId": 200, "photo": null, "plastic": "Champion", "color": "#3b82f6", "link": null },
+        { "discId": 54, "photo": null, "plastic": "Star", "color": "#eab308", "link": null },
+        { "discId": 502, "photo": null, "plastic": "GStar", "color": "#22c55e", "link": null },
+        { "discId": 18, "photo": null, "plastic": "DX", "color": "#f97316", "link": null },
+        { "discId": 352, "photo": null, "plastic": "Champion", "color": "#ec4899", "link": null },
+        { "discId": 190, "photo": null, "plastic": "Pro", "color": "#6366F1", "link": null },
+        { "discId": 249, "photo": null, "plastic": "R-Pro", "color": "#f8fafc", "link": null }
+      ]
+    },
+    {
+      "name": "MVP Sample Bag",
+      "manufacturer": "MVP",
+      "playerName": "MVP Team",
+      "slots": [
+        { "discId": 268, "photo": null, "plastic": "Neutron", "color": "#6366F1", "link": null },
+        { "discId": 799, "photo": null, "plastic": "Cosmic Neutron", "color": "#ec4899", "link": null },
+        { "discId": 660, "photo": null, "plastic": "Plasma", "color": "#22D3EE", "link": null },
+        { "discId": 720, "photo": null, "plastic": "Neutron", "color": "#ef4444", "link": null },
+        { "discId": 263, "photo": null, "plastic": "Proton", "color": "#eab308", "link": null },
+        { "discId": 789, "photo": null, "plastic": "Eclipse 2.0", "color": "#22c55e", "link": null },
+        { "discId": 379, "photo": null, "plastic": "Neutron Soft", "color": "#f8fafc", "link": null },
+        { "discId": 652, "photo": null, "plastic": "Electron", "color": "#3b82f6", "link": null }
+      ]
+    },
+    {
+      "name": "Discraft Sample Bag",
+      "manufacturer": "Discraft",
+      "playerName": "Discraft Team",
+      "slots": [
+        { "discId": 204, "photo": null, "plastic": "ESP", "color": "#6366F1", "link": null },
+        { "discId": 205, "photo": null, "plastic": "Z", "color": "#ef4444", "link": null },
+        { "discId": 279, "photo": null, "plastic": "Big Z", "color": "#f97316", "link": null },
+        { "discId": 555, "photo": null, "plastic": "ESP", "color": "#22c55e", "link": null },
+        { "discId": 141, "photo": null, "plastic": "Z", "color": "#eab308", "link": null },
+        { "discId": 191, "photo": null, "plastic": "ESP", "color": "#22D3EE", "link": null },
+        { "discId": 1130, "photo": null, "plastic": "Jawbreaker", "color": "#ec4899", "link": null },
+        { "discId": 334, "photo": null, "plastic": "Putter Line", "color": "#f8fafc", "link": null }
+      ]
+    },
+    {
+      "name": "Latitude 64 Sample Bag",
+      "manufacturer": "Latitude 64",
+      "playerName": "Latitude 64 Team",
+      "slots": [
+        { "discId": 777, "photo": null, "plastic": "Gold", "color": "#eab308", "link": null },
+        { "discId": 86, "photo": null, "plastic": "Opto", "color": "#3b82f6", "link": null },
+        { "discId": 346, "photo": null, "plastic": "Grand", "color": "#6366F1", "link": null },
+        { "discId": 390, "photo": null, "plastic": "Royal Grand", "color": "#ec4899", "link": null },
+        { "discId": 361, "photo": null, "plastic": "Opto", "color": "#f97316", "link": null },
+        { "discId": 707, "photo": null, "plastic": "Retro", "color": "#22c55e", "link": null },
+        { "discId": 102, "photo": null, "plastic": "Zero Soft", "color": "#22D3EE", "link": null },
+        { "discId": 248, "photo": null, "plastic": "Zero Medium", "color": "#f8fafc", "link": null }
+      ]
+    },
+    {
+      "name": "Westside Discs Sample Bag",
+      "manufacturer": "Westside Discs",
+      "playerName": "Westside Team",
+      "slots": [
+        { "discId": 161, "photo": null, "plastic": "VIP", "color": "#ef4444", "link": null },
+        { "discId": 261, "photo": null, "plastic": "Tournament", "color": "#6366F1", "link": null },
+        { "discId": 123, "photo": null, "plastic": "VIP", "color": "#3b82f6", "link": null },
+        { "discId": 350, "photo": null, "plastic": "Tournament", "color": "#22c55e", "link": null },
+        { "discId": 1079, "photo": null, "plastic": "VIP", "color": "#eab308", "link": null },
+        { "discId": 364, "photo": null, "plastic": "Tournament", "color": "#f97316", "link": null },
+        { "discId": 214, "photo": null, "plastic": "BT Medium", "color": "#f8fafc", "link": null },
+        { "discId": 563, "photo": null, "plastic": "BT Soft", "color": "#ec4899", "link": null }
+      ]
+    }
+  ]
+}

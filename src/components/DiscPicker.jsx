@@ -2,12 +2,34 @@ import { useState, useMemo, useRef, useCallback, useEffect, memo } from 'react'
 
 const MAX_DISPLAYED_DISCS = 50 // Limit for performance
 
+// Simple resize fallback — always produces a small output
+const simpleResize = (img) => {
+  try {
+    const outputSize = 400
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    canvas.width = outputSize
+    canvas.height = outputSize
+    const size = Math.min(img.width, img.height)
+    const sx = (img.width - size) / 2
+    const sy = (img.height - size) / 2
+    ctx.drawImage(img, sx, sy, size, size, 0, 0, outputSize, outputSize)
+    return canvas.toDataURL('image/jpeg', 0.85)
+  } catch (e) {
+    // Canvas is tainted (CORS) or other error — can't produce output
+    return null
+  }
+}
+
 // Detect disc edges and crop image to fill circle
 // Handles multi-colored discs (Halo plastic) and black rims (MVP, etc.)
 const cropDiscFromImage = (imageUrl) => {
   return new Promise((resolve) => {
     const img = new Image()
-    img.crossOrigin = 'Anonymous'
+    // Only set crossOrigin for external URLs, not data URLs
+    if (!imageUrl.startsWith('data:')) {
+      img.crossOrigin = 'Anonymous'
+    }
 
     img.onload = () => {
       const canvas = document.createElement('canvas')
@@ -154,15 +176,16 @@ const cropDiscFromImage = (imageUrl) => {
           0, 0, outputSize, outputSize
         )
 
-        resolve(outputCanvas.toDataURL('image/jpeg', 0.92))
+        resolve(outputCanvas.toDataURL('image/jpeg', 0.85))
       } catch (e) {
-        console.error('Crop error:', e)
-        resolve(imageUrl)
+        // Edge detection failed (e.g. tainted canvas) — fall back to simple resize
+        resolve(simpleResize(img))
       }
     }
 
     img.onerror = () => {
-      resolve(imageUrl)
+      // Image failed to load — nothing we can do
+      resolve(null)
     }
 
     img.src = imageUrl
@@ -174,7 +197,9 @@ const cropDiscFromImage = (imageUrl) => {
 const extractDominantColor = (imageUrl) => {
   return new Promise((resolve) => {
     const img = new Image()
-    img.crossOrigin = 'Anonymous'
+    if (!imageUrl.startsWith('data:')) {
+      img.crossOrigin = 'Anonymous'
+    }
 
     img.onload = () => {
       const canvas = document.createElement('canvas')
@@ -306,9 +331,17 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpda
   const [plastic, setPlastic] = useState(currentSlot?.plastic || '')
   const [color, setColor] = useState(currentSlot?.color || '#7c3aed')
   const [link, setLink] = useState(currentSlot?.link || '')
-  const [selectedDiscId, setSelectedDiscId] = useState(currentSlot?.discId || null)
+  const [selectedDiscId, setSelectedDiscId] = useState(currentSlot?.discId != null ? String(currentSlot.discId) : null)
   const [appearanceMode, setAppearanceMode] = useState(currentSlot?.photo ? 'photo' : 'color')
   const fileInputRef = useRef(null)
+  const isMountedRef = useRef(true)
+
+  // Cleanup ref on unmount
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false
+    }
+  }, [])
 
   // Lock body scroll when modal is open (mobile fix)
   useEffect(() => {
@@ -408,9 +441,11 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpda
     if (file) {
       const reader = new FileReader()
       reader.onload = async (event) => {
+        if (!isMountedRef.current) return
         const dataUrl = event.target?.result
         // Crop disc from image and extract color
         const croppedImage = await cropDiscFromImage(dataUrl)
+        if (!isMountedRef.current || !croppedImage) return
         setPhotoUrl(croppedImage)
         onPhotoUpdate(croppedImage)
         await analyzeAndSetColor(croppedImage)
@@ -429,15 +464,25 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpda
     try {
       // Try to crop disc from image
       const croppedImage = await cropDiscFromImage(url)
-      setPhotoUrl(croppedImage)
-      onPhotoUpdate(croppedImage)
-      await analyzeAndSetColor(croppedImage)
+      if (!isMountedRef.current) return
+      if (croppedImage) {
+        setPhotoUrl(croppedImage)
+        onPhotoUpdate(croppedImage)
+        await analyzeAndSetColor(croppedImage)
+      } else {
+        // Crop returned null (image failed to load) — store URL directly
+        setPhotoUrl(url)
+        onPhotoUpdate(url)
+      }
     } catch (e) {
-      // If processing fails, just use original URL
+      // If processing fails, store URL directly
+      if (!isMountedRef.current) return
       setPhotoUrl(url)
       onPhotoUpdate(url)
     }
-    setIsProcessing(false)
+    if (isMountedRef.current) {
+      setIsProcessing(false)
+    }
   }
 
   const handlePhotoUrlChange = (url) => {
@@ -489,7 +534,9 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpda
 
   const handleSave = () => {
     if (selectedDiscId) {
-      onSelect(selectedDiscId)
+      // Pass photoUrl directly so the photo is guaranteed to be saved
+      // even if the async updateSlot state hasn't committed yet
+      onSelect(selectedDiscId, photoUrl || null)
     } else {
       onClose()
     }
@@ -656,7 +703,7 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpda
           </select>
         </div>
 
-        {currentSlot?.discId && (
+        {currentSlot?.discId != null && (
           <button className="remove-disc-btn" onClick={onRemove}>
             Remove Current Disc
           </button>
@@ -673,8 +720,8 @@ function DiscPicker({ discs, currentSlot, onSelect, onPhotoUpdate, onPlasticUpda
                 <DiscItem
                   key={disc.id}
                   disc={disc}
-                  isSelected={selectedDiscId === disc.id}
-                  onSelect={setSelectedDiscId}
+                  isSelected={String(selectedDiscId) === String(disc.id)}
+                  onSelect={(id) => setSelectedDiscId(String(id))}
                 />
               ))}
               {hasMoreResults && (

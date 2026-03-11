@@ -1,5 +1,5 @@
 {
-  "name": "bagr",
+  "name": "dgbag",
   "version": "1.0.0",
   "description": "Disc Golf Bag Sharing App",
   "type": "module",
@@ -9,8 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.90.1",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "react-router-dom": "^7.12.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.1.2",

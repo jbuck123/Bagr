@@ -1,204 +1,64 @@
-import { useState, useEffect } from 'react'
-import Bag from './components/Bag'
-import DiscPicker from './components/DiscPicker'
-import ShareButton from './components/ShareButton'
-import discsData from './data/discs.json'
-import Logo from './data/Logos/DG_Bag_logo_transparent_1.png'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
+import { useAuth } from './hooks/useAuth'
+import Layout from './components/layout/Layout'
+import HomePage from './pages/HomePage'
+import LoginPage from './pages/LoginPage'
+import SignupPage from './pages/SignupPage'
+import AuthCallbackPage from './pages/AuthCallbackPage'
+import MyBagPage from './pages/MyBagPage'
+import SettingsPage from './pages/SettingsPage'
+import PublicBagPage from './pages/PublicBagPage'
+import ProfilePage from './pages/ProfilePage'
+import ProtectedRoute from './components/auth/ProtectedRoute'
 
-const DEFAULT_BAG_SIZE = 12
+// Wrapper for login/signup to redirect if already logged in
+function AuthRoute({ children }) {
+  const { user, loading } = useAuth()
+
+  // Don't redirect while still loading - show the page
+  if (loading) return children
+  if (user) return <Navigate to="/my-bag" replace />
+  return children
+}
+
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        {/* Public routes */}
+        <Route index element={<HomePage />} />
+        <Route
+          path="login"
+          element={<AuthRoute><LoginPage /></AuthRoute>}
+        />
+        <Route
+          path="signup"
+          element={<AuthRoute><SignupPage /></AuthRoute>}
+        />
+        <Route path="auth/callback" element={<AuthCallbackPage />} />
+
+        {/* Protected routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="my-bag" element={<MyBagPage />} />
+          <Route path="settings" element={<SettingsPage />} />
+        </Route>
+
+        {/* Dynamic public routes (must be last) */}
+        <Route path=":userId" element={<PublicBagPage />} />
+        <Route path=":userId/profile" element={<ProfilePage />} />
+      </Route>
+    </Routes>
+  )
+}
 
 function App() {
-  // Each slot: { discId: number | null, photo: string | null, plastic: string | null, color: string | null, link: string | null }
-  const [bag, setBag] = useState(() =>
-    Array(DEFAULT_BAG_SIZE).fill(null).map(() => ({ discId: null, photo: null, plastic: null, color: null, link: null }))
-  )
-
-  const [pickerOpen, setPickerOpen] = useState(false)
-  const [activeSlot, setActiveSlot] = useState(null)
-  const [playerName, setPlayerName] = useState('')
-  const [isSharedBag, setIsSharedBag] = useState(false)
-
-  // Load bag from URL on mount
-  useEffect(() => {
-    const hash = window.location.hash
-    if (hash.startsWith('#bag=')) {
-      try {
-        const data = JSON.parse(decodeURIComponent(hash.slice(5)))
-        if (data.bag) setBag(data.bag)
-        if (data.name) setPlayerName(data.name)
-        setIsSharedBag(true)
-      } catch (e) {
-        console.error('Failed to parse bag from URL')
-      }
-    }
-  }, [])
-
-  const handleCreateNewBag = () => {
-    window.location.href = window.location.origin + window.location.pathname
-  }
-
-  const handleSlotClick = (slotIndex) => {
-    setActiveSlot(slotIndex)
-    setPickerOpen(true)
-  }
-
-  const handleDiscSelect = (discId, photo = null) => {
-    if (activeSlot === null) return
-
-    setBag(prev => {
-      const newBag = [...prev]
-      newBag[activeSlot] = {
-        discId,
-        photo: photo !== null ? photo : prev[activeSlot]?.photo || null,
-        plastic: prev[activeSlot]?.plastic || null,
-        color: prev[activeSlot]?.color || null,
-        link: prev[activeSlot]?.link || null
-      }
-      return newBag
-    })
-
-    setPickerOpen(false)
-    setActiveSlot(null)
-  }
-
-  const handlePhotoUpdate = (photo) => {
-    if (activeSlot === null) return
-
-    setBag(prev => {
-      const newBag = [...prev]
-      newBag[activeSlot] = { ...prev[activeSlot], photo }
-      return newBag
-    })
-  }
-
-  const handlePlasticUpdate = (plastic) => {
-    if (activeSlot === null) return
-
-    setBag(prev => {
-      const newBag = [...prev]
-      newBag[activeSlot] = { ...prev[activeSlot], plastic }
-      return newBag
-    })
-  }
-
-  const handleColorUpdate = (color) => {
-    if (activeSlot === null) return
-
-    setBag(prev => {
-      const newBag = [...prev]
-      newBag[activeSlot] = { ...prev[activeSlot], color }
-      return newBag
-    })
-  }
-
-  const handleLinkUpdate = (link) => {
-    if (activeSlot === null) return
-
-    setBag(prev => {
-      const newBag = [...prev]
-      newBag[activeSlot] = { ...prev[activeSlot], link }
-      return newBag
-    })
-  }
-
-  const handleRemoveDisc = () => {
-    if (activeSlot === null) return
-    setBag(prev => {
-      const newBag = [...prev]
-      newBag[activeSlot] = { discId: null, photo: null, plastic: null, color: null, link: null }
-      return newBag
-    })
-    setPickerOpen(false)
-    setActiveSlot(null)
-  }
-
-  const addSlot = () => {
-    setBag(prev => [...prev, { discId: null, photo: null, plastic: null, color: null, link: null }])
-  }
-
-  const removeLastSlot = () => {
-    if (bag.length > 1) {
-      setBag(prev => prev.slice(0, -1))
-    }
-  }
-
-  const clearBag = () => {
-    if (window.confirm('Clear all discs from your bag?')) {
-      setBag(Array(DEFAULT_BAG_SIZE).fill(null).map(() => ({ discId: null, photo: null, plastic: null, color: null, link: null })))
-    }
-  }
-
-  const generateShareUrl = () => {
-    const data = { bag, name: playerName }
-    const encoded = encodeURIComponent(JSON.stringify(data))
-    return `${window.location.origin}${window.location.pathname}#bag=${encoded}`
-  }
-
-  const getDiscById = (id) => discsData.discs.find(d => d.id === id)
-
   return (
-    <div className="app">
-      <header className="header">
-        <img src={Logo} alt="Bagr - Disc Golf Companion" className="logo-image" />
-      </header>
-
-      {isSharedBag && (
-        <div className="shared-bag-banner">
-          <span>{playerName ? `${playerName}'s Bag` : 'Shared Bag'}</span>
-          <button className="create-new-btn" onClick={handleCreateNewBag}>Create New Bag</button>
-        </div>
-      )}
-
-      {!isSharedBag && (
-        <div className="player-name-section">
-          <input
-            type="text"
-            placeholder="Your name (optional)"
-            value={playerName}
-            onChange={(e) => setPlayerName(e.target.value)}
-            className="player-name-input"
-          />
-        </div>
-      )}
-
-      <Bag
-        bag={bag}
-        onSlotClick={isSharedBag ? undefined : handleSlotClick}
-        getDiscById={getDiscById}
-        readOnly={isSharedBag}
-      />
-
-      {!isSharedBag && (
-        <div className="bag-controls">
-          <button className="bag-control-btn" onClick={addSlot}>+ Add Slot</button>
-          <button className="bag-control-btn" onClick={removeLastSlot} disabled={bag.length <= 1}>
-            − Remove Slot
-          </button>
-          <button className="bag-control-btn clear-btn" onClick={clearBag}>
-            Clear Bag
-          </button>
-        </div>
-      )}
-
-      {!isSharedBag && <ShareButton generateUrl={generateShareUrl} playerName={playerName} />}
-
-      {pickerOpen && (
-        <DiscPicker
-          discs={discsData.discs}
-          currentSlot={activeSlot !== null ? bag[activeSlot] : null}
-          onSelect={handleDiscSelect}
-          onPhotoUpdate={handlePhotoUpdate}
-          onPlasticUpdate={handlePlasticUpdate}
-          onColorUpdate={handleColorUpdate}
-          onLinkUpdate={handleLinkUpdate}
-          onRemove={handleRemoveDisc}
-          onClose={() => {
-            setPickerOpen(false)
-            setActiveSlot(null)
-          }}
-        />
-      )}
-    </div>
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </BrowserRouter>
   )
 }
 
